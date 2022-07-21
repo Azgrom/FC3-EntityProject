@@ -21,16 +21,24 @@ export default class Customer {
         }
     }
 
+    get name(): string {
+        return this._name;
+    }
+
     changeName(name: string) {
         this._name = name;
         this.validate();
     }
 
     activate() {
-        if (this._address != undefined) {
-            throw new Error("address.ts is mandatory to activate a customer");
+        if (this._address === undefined) {
+            throw new Error("Address is mandatory to activate a customer");
         }
         this._active = true;
+    }
+
+    isActive(): boolean {
+        return this._active;
     }
 
     deactivate() {
