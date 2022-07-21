@@ -23,7 +23,13 @@ describe("Customer unit tests", () => {
     it("Should change name", () => {
         const product = new Product("123", "P1", 100);
         product.changeName("Product 2");
-        expect(product._name).toBe("Product 2");
+        expect(product.name).toBe("Product 2");
+    });
+
+    it("Should change price", () => {
+        const product = new Product("123", "P1", 100);
+        product.changePrice(20);
+        expect(product.price).toBe(20);
     });
 
 })
