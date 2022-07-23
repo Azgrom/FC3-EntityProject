@@ -1,5 +1,5 @@
 export default class Product {
-    _id:string;
+    private _id:string;
     private _name:string;
     private _price:number;
 
@@ -9,6 +9,10 @@ export default class Product {
         this._name = name;
         this._price = price;
         this.validate();
+    }
+
+    get id(): string {
+        return this._id;
     }
 
     get name(): string {
