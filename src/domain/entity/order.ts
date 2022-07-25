@@ -15,6 +15,22 @@ export default class Order{
         this.validate();
     }
 
+    get id(): string {
+        return this._id;
+    }
+
+    get customer_id(): string {
+        return this._customer_id;
+    }
+
+    get items(): OrderItem[] {
+        return this._items;
+    }
+
+    total(): number {
+        return this._items.reduce((acc, item) => acc + item.price, 0);
+    }
+
     validate(): boolean {
         if (this._id.length === 0) {
             throw new Error("Id is required");
@@ -26,9 +42,5 @@ export default class Order{
             throw new Error("Items are required");
         }
         return true;
-    }
-
-    total(): number {
-        return this._items.reduce((acc, item) => acc + item.price, 0);
     }
 }
