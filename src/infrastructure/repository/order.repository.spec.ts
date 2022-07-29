@@ -65,4 +65,16 @@ describe('Order repository test', function () {
             ],
         });
     });
+
+    it('should update an order', function () {
+
+    });
+
+    it('should find a order', function () {
+
+    });
+
+    it('should find all orders', function () {
+
+    });
 });
