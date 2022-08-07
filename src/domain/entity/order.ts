@@ -1,6 +1,6 @@
 import OrderItem from "./orderItem";
 
-export default class Order{
+export default class Order {
     private _id: string;
     private _customer_id: string;
     private _items: OrderItem[] = [];
@@ -27,6 +27,12 @@ export default class Order{
         return this._items;
     }
 
+    updateItems(items: OrderItem[]) {
+        this._items = items;
+        this._total = this.total();
+        this.validate();
+    }
+
     total(): number {
         return this._items.reduce((acc, item) => acc + item.price, 0);
     }
@@ -41,6 +47,10 @@ export default class Order{
         if (this._items.length === 0) {
             throw new Error("Items are required");
         }
+        if (this._total < 0) {
+            throw new Error("Total can not be negative");
+        }
+
         return true;
     }
 }

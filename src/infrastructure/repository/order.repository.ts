@@ -1,11 +1,10 @@
-import Customer from "../../domain/entity/customer";
-import CustomerModel from "../db/sequelize/model/customer.model";
-import Address from "../../domain/entity/address";
 import OrderModel from "../db/sequelize/model/order.model";
 import Order from "../../domain/entity/order";
 import OrderItemModel from "../db/sequelize/model/order-item.model";
+import OrderRepositoryInterface from "../../domain/repository/order-repository.interface";
+import OrderItem from "../../domain/entity/orderItem";
 
-export default class OrderRepository {
+export default class OrderRepository implements OrderRepositoryInterface {
     async create(entity: Order): Promise<void> {
         await OrderModel.create({
             id: entity.id,
@@ -24,61 +23,70 @@ export default class OrderRepository {
     },);
     }
 
-    async find(id: string): Promise<Customer> {
-        let customerModel;
+    async find(id: string): Promise<Order> {
+        let orderModel;
 
         try {
-            customerModel = await CustomerModel.findOne({ where: { id }, rejectOnEmpty: true });
+            orderModel = await OrderModel.findOne({ where: { id }, rejectOnEmpty: true });
         } catch (error) {
-            throw new Error("Customer not found");
+            throw new Error("Order not found");
         }
 
-        let customer = new Customer(
-            customerModel.id,
-            customerModel.name,
+        let order = new Order(
+            orderModel.id,
+            orderModel.customer_id,
+            orderModel.items
         );
-        const address = new Address(
-            customerModel.street,
-            customerModel.number,
-            customerModel.zipcode,
-            customerModel.city
-        );
-        customer.changeAddress(address);
-        return customer;
+
+        return order;
     }
 
-    async findAll(): Promise<Customer[]> {
-        const customerModels = await CustomerModel.findAll();
+    async findAll(): Promise<Order[]> {
+        const orderModels = await OrderModel.findAll({ include: ["items"], });
 
-        const customers = customerModels.map((customerModels) => {
-            let customer = new Customer(customerModels.id, customerModels.name);
-            customer.addRewardPoints(customerModels.rewardPoints);
-            const address = new Address(
-                customerModels.street,
-                customerModels.number,
-                customerModels.zipcode,
-                customerModels.city
-            );
-            customer.changeAddress(address);
-            if (customerModels.active) {
-                customer.activate();
-            }
-
-            return customer;
+        const orders = orderModels.map((o) => {
+            const orderItems = o.items.map((item) => {
+                let price = item.price;
+                let quantity = item.quantity;
+                return new OrderItem(item.id, item.name, price, item.productId, quantity);
+            })
+            return new Order(o.id, o.customerId, orderItems);
         })
 
-        return customers;
+        return orders;
     }
 
-    findByName(name: string) {
-    }
+    async update(entity: Order): Promise<void> {
+        await OrderItemModel.destroy({
+            where: { orderId: entity.id }
+        });
 
-    async update(entity: Customer): Promise<void> {
-        await CustomerModel.update({
-                name: entity.name,
-                number: entity.address.number
+        let items = entity.items;
+
+        items.map(async (item) => {
+            await OrderItemModel.create({
+                id: item.id,
+                orderId: entity.id,
+                productId: item.productId,
+                price: item.price,
+                name: item.name,
+                quantity: item.quantity
+            })
+        });
+
+        await OrderModel.update({
+                total: entity.total(),
+                items: entity.items.map((item) => ({
+                    id: item.id,
+                    productId: item.productId,
+                    price: item.price,
+                    name: item.name,
+                    quantity: item.quantity
+                })),
             },
-            { where: { id: entity.id },  }
+            {
+                where: { id: entity.id },
+            }
         );
     }
 }
