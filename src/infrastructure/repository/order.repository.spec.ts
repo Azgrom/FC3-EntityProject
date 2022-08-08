@@ -57,7 +57,7 @@ describe('Order repository test', function () {
                 {
                     id: orderItem.id,
                     name: orderItem.name,
-                    price: orderItem.price,
+                    price: orderItem.unitPrice,
                     productId: orderItem.productId,
                     quantity: orderItem.quantity,
                     orderId: "123"
@@ -111,21 +111,31 @@ describe('Order repository test', function () {
         await productRepository.create(product);
         await orderRepository.create(order);
 
-        const orderModel = await OrderModel.findOne({where: {id: "123"}, include: ["items"]});
+        const orderModel = await OrderModel.findOne({ where: { id: order.id }, include: ["items"] });
+        const orderResult = await orderRepository.find(order.id);
+        let items = orderResult.items.map((item) =>
+            new OrderItem(
+                item.id,
+                item.name,
+                item.unitPrice,
+                item.productId,
+                item.quantity,
+            )
+        );
         expect(orderModel.toJSON()).toStrictEqual({
-            id: "123",
-            customerId: "123",
-            total: order.total(),
+            id: orderResult.id,
+            customerId: orderResult.customer_id,
+            total: orderResult.total(),
             items: [
                 {
-                    id: orderItem.id,
-                    productId: product.id,
-                    name: product.name,
-                    price: orderItem.price,
-                    quantity: orderItem.quantity,
-                    orderId: "123"
-                },
-            ]
+                    id: orderResult.items[0].id,
+                    price: orderResult.items[0].unitPrice,
+                    name: orderResult.items[0].name,
+                    productId: orderResult.items[0].productId,
+                    quantity: orderResult.items[0].quantity,
+                    orderId: orderResult.id
+                }
+            ],
         });
     });
 
@@ -143,6 +153,7 @@ describe('Order repository test', function () {
         await orderRepository.create(order2);
 
         const orders = await OrderModel.findAll({ include: ["items"] });
+        const ordersResult = await orderRepository.findAll();
         expect(orders).toHaveLength(2);
         expect(orders[0].toJSON()).toStrictEqual(
             {
@@ -151,13 +162,13 @@ describe('Order repository test', function () {
                 total: order1.total(),
                 items: [
                     {
-                        id: orderItem1.id,
-                        productId: product.id,
-                        name: product.name,
-                        price: orderItem1.price,
-                        quantity: orderItem1.quantity,
-                        orderId: order1.id
-                    },
+                        id: ordersResult[0].items[0].id,
+                        price: ordersResult[0].items[0].unitPrice,
+                        name: ordersResult[0].items[0].name,
+                        productId: ordersResult[0].items[0].productId,
+                        quantity: ordersResult[0].items[0].quantity,
+                        orderId: ordersResult[0].id
+                    }
                 ]
             }
         );
@@ -168,13 +179,13 @@ describe('Order repository test', function () {
             total: order2.total(),
             items: [
                 {
-                    id: orderItem2.id,
-                    productId: product.id,
-                    name: product.name,
-                    price: orderItem2.price,
-                    quantity: orderItem2.quantity,
-                    orderId: order2.id
-                },
+                    id: ordersResult[1].items[0].id,
+                    price: ordersResult[1].items[0].unitPrice,
+                    name: ordersResult[1].items[0].name,
+                    productId: ordersResult[1].items[0].productId,
+                    quantity: ordersResult[1].items[0].quantity,
+                    orderId: ordersResult[1].id
+                }
             ]
         }
         );

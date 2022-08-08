@@ -13,32 +13,47 @@ export default class OrderRepository implements OrderRepositoryInterface {
             items: entity.items.map((item) => ({
                 id: item.id,
                 name: item.name,
-                price: item.price,
+                price: item.unitPrice,
                 productId: item.productId,
                 quantity: item.quantity,
             })),
         },
             {
                 include: [{model: OrderItemModel}]
-    },);
+            },
+            );
     }
 
     async find(id: string): Promise<Order> {
         let orderModel;
 
         try {
-            orderModel = await OrderModel.findOne({ where: { id }, rejectOnEmpty: true });
+            orderModel = await OrderModel.findOne(
+                {
+                    where:
+                        { id: id },
+                    include: ["items"],
+                    rejectOnEmpty: true
+                });
         } catch (error) {
             throw new Error("Order not found");
         }
 
-        let order = new Order(
-            orderModel.id,
-            orderModel.customer_id,
-            orderModel.items
-        );
+        const orderItems = orderModel.items.map((item) => {
+            return new OrderItem(
+                item.id,
+                item.name,
+                item.price,
+                item.productId,
+                item.quantity
+            )
+        });
 
-        return order;
+        return new Order(
+            orderModel.id,
+            orderModel.customerId,
+            orderItems
+        );
     }
 
     async findAll(): Promise<Order[]> {
@@ -79,7 +94,7 @@ export default class OrderRepository implements OrderRepositoryInterface {
                 items: entity.items.map((item) => ({
                     id: item.id,
                     productId: item.productId,
-                    price: item.price,
+                    price: item.unitPrice,
                     name: item.name,
                     quantity: item.quantity
                 })),

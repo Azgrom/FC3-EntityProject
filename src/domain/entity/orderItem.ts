@@ -36,6 +36,10 @@ export default class OrderItem {
         return this._quantity;
     }
 
+    get unitPrice(): number {
+        return this._price;
+    }
+
     validate(): boolean {
         if (this._quantity <= 0) {
             throw new Error("Quantity must be greater than zero");
