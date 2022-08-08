@@ -5,18 +5,18 @@ describe("Customer unit tests", () => {
 
     it("Should throw error when id is empty", () => {
         expect(() => {
-            let customer = new Customer("", "John", null);
+            let customer = Customer.create("", "John");
         }).toThrowError("Id is required");
     });
 
     it("Should throw error when name is empty", () => {
         expect(() => {
-            let customer = new Customer("123", "", null);
+            let customer = Customer.create("123", "");
         }).toThrowError("Name is required");
     });
 
     it("Should change name", () => {
-        const customer = new Customer("123", "John", null);
+        const customer = Customer.create("123", "John");
 
         customer.changeName("Jane");
 
@@ -24,9 +24,9 @@ describe("Customer unit tests", () => {
     });
 
     it("Should activate customer", () => {
-        const customer = new Customer("1", "Customer1", null);
+        const customer = Customer.create("1", "Customer1");
         const address = new Address("St1", 123, "123456", "City");
-        customer._address = address;
+        customer.changeAddress(address);
 
         customer.activate()
 
@@ -35,7 +35,7 @@ describe("Customer unit tests", () => {
 
     it("Should throw error when address is undefined when you activate a customer", () => {
         expect(() => {
-            const customer = new Customer("1", "Customer1", null);
+            const customer = Customer.create("1", "Customer1");
 
             customer.activate()
         }).toThrowError("Address is mandatory to activate a customer");
@@ -45,7 +45,7 @@ describe("Customer unit tests", () => {
     });
 
     it("Should deactivate customer", () => {
-        const customer = new Customer("1", "Customer1", null);
+        const customer = Customer.create("1", "Customer1");
 
         customer.deactivate()
 
@@ -53,7 +53,7 @@ describe("Customer unit tests", () => {
     });
 
     it("Should add reward points", () => {
-        const customer = new Customer("1", "Customer1", null);
+        const customer = Customer.create("1", "Customer1");
 
         expect(customer.rewardPoints).toBe(0);
         customer.addRewardPoints(10)

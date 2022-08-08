@@ -1,4 +1,4 @@
-import CustomerRepositoryInterface from "../../domain/repository/Customer-repository.interface";
+import CustomerRepositoryInterface from "../../domain/repository/customer-repository.interface";
 import CustomerModel from "../db/sequelize/model/customer.model";
 import Customer from "../../domain/entity/customer";
 import Address from "../../domain/entity/address";
@@ -26,10 +26,9 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
             throw new Error("Customer not found");
         }
 
-        let customer = new Customer(
+        let customer = Customer.create(
             customerModel.id,
             customerModel.name,
-            null
         );
         const address = new Address(
             customerModel.street,
@@ -45,7 +44,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         const customerModels = await CustomerModel.findAll();
 
         const customers = customerModels.map((customerModels) => {
-            let customer = new Customer(customerModels.id, customerModels.name, null);
+            let customer = Customer.create(customerModels.id, customerModels.name);
             customer.addRewardPoints(customerModels.rewardPoints);
             const address = new Address(
                 customerModels.street,
@@ -62,9 +61,6 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         })
 
         return customers;
-    }
-
-    findByName(name: string) {
     }
 
     async update(entity: Customer): Promise<void> {

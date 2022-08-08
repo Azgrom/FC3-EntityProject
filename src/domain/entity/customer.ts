@@ -1,6 +1,7 @@
 import Address from "./address";
 import EventDispatcherInterface from "../event/@shared/event-dispatcher.interface";
 import CustomerCreatedEvent from "../event/customer/customer-created.event";
+import CustomerChangeAddressEvent from "../event/customer/customer-change-address.event";
 
 export default class Customer {
     private _id: string;
@@ -8,13 +9,15 @@ export default class Customer {
     private _address!: Address;
     private _active: boolean = true;
     private _rewardPoints: number = 0;
+    private _customerEvents?: EventDispatcherInterface;
 
-    constructor(id: string, name: string, creationEvent: EventDispatcherInterface) {
+    private constructor(id: string, name: string, customerEvent: EventDispatcherInterface) {
         this._id = id;
         this._name = name;
         this.validate();
-        if (creationEvent !== null) {
-            creationEvent.notify(new CustomerCreatedEvent({
+        this._customerEvents = customerEvent;
+        if (customerEvent !== null) {
+            this._customerEvents.notify(new CustomerCreatedEvent({
                 id: id,
                 name: name,
             }));
@@ -35,6 +38,14 @@ export default class Customer {
 
     get rewardPoints(): number {
         return this._rewardPoints;
+    }
+
+    static create(id: string, name: string): Customer {
+        return new Customer(id, name, null);
+    }
+
+    static createAndNotify(id: string, name: string, creationEvent: EventDispatcherInterface): Customer {
+        return new Customer(id, name, creationEvent);
     }
 
     validate() {
@@ -72,5 +83,16 @@ export default class Customer {
 
     changeAddress(address: Address) {
         this._address = address;
+        if (this._customerEvents !== null) {
+            this._customerEvents.notify(new CustomerChangeAddressEvent({
+                id: this.id,
+                name: this.name,
+                address: this.address
+            }))
+        }
+    }
+
+    assignEventDispatcher(eventDispatcher: EventDispatcherInterface) {
+        this._customerEvents = eventDispatcher;
     }
 }

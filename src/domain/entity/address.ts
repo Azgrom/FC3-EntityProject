@@ -43,5 +43,7 @@ export default class Address {
         }
     }
 
-
+    toString(): string {
+        return `${this.street}, ${this.number}, ${this.city}, ${this.zip}`
+    }
 }
