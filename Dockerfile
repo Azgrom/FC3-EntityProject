@@ -6,5 +6,3 @@ RUN npm install
 
 COPY --chown=node:node . .
 USER node
-
-CMD ["tail", "-f", "/dev/null"]
