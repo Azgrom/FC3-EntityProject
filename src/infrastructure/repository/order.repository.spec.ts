@@ -26,7 +26,7 @@ describe('Order repository test', function () {
         await sequelize.addModels([CustomerModel, OrderModel, OrderItemModel, ProductModel]);
         await sequelize.sync()
 
-        const customer = new Customer("123", "Customer 1");
+        const customer = new Customer("123", "Customer 1", null);
         const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
         customer.changeAddress(address);
         const customerRepository = new CustomerRepository();

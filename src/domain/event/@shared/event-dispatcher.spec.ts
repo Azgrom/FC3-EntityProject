@@ -50,11 +50,12 @@ describe('Domain events tests', function () {
         const eventHandler = new SendEmailWhenProductIsCreatedHandler();
         const spyEventHandler = jest.spyOn(eventHandler, "handle");
 
-        eventDispatcher.register("ProductCreatedEvent", eventHandler);
+        let eventName = "ProductCreatedEvent";
+        eventDispatcher.register(eventName, eventHandler);
 
-        expect(eventDispatcher.eventHandlers["ProductCreatedEvent"]).toBeDefined();
-        expect(eventDispatcher.eventHandlers["ProductCreatedEvent"].length).toBe(1);
-        expect(eventDispatcher.eventHandlers["ProductCreatedEvent"][0]).toMatchObject(eventHandler);
+        expect(eventDispatcher.eventHandlers[eventName]).toBeDefined();
+        expect(eventDispatcher.eventHandlers[eventName].length).toBe(1);
+        expect(eventDispatcher.eventHandlers[eventName][0]).toMatchObject(eventHandler);
 
         const productCreatedEvent = new ProductCreatedEvent({
             name: "Product 1",

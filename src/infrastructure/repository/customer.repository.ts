@@ -29,6 +29,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         let customer = new Customer(
             customerModel.id,
             customerModel.name,
+            null
         );
         const address = new Address(
             customerModel.street,
@@ -44,7 +45,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
         const customerModels = await CustomerModel.findAll();
 
         const customers = customerModels.map((customerModels) => {
-            let customer = new Customer(customerModels.id, customerModels.name);
+            let customer = new Customer(customerModels.id, customerModels.name, null);
             customer.addRewardPoints(customerModels.rewardPoints);
             const address = new Address(
                 customerModels.street,

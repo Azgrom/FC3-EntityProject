@@ -5,7 +5,7 @@ import Customer from "../entity/customer";
 
 describe("Order service unit tests", () => {
     it('should place an order', function () {
-        const customer = new Customer("c1", "Customer 1");
+        const customer = new Customer("c1", "Customer 1", null);
         const item1 = new OrderItem("i1", "Item 1", 10, "p1", 1);
 
         const order = OrderService.placeOrder(customer, [item1]);

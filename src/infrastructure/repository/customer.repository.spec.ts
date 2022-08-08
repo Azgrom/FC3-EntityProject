@@ -25,7 +25,7 @@ describe('Customer repository test', function () {
 
     it('should create a customer', async function () {
         const customerRepository = new CustomerRepository();
-        const customer = new Customer("123", "Customer 1");
+        const customer = new Customer("123", "Customer 1", null);
         const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
         customer.changeAddress(address);
         await customerRepository.create(customer);
@@ -46,7 +46,7 @@ describe('Customer repository test', function () {
 
     it('should update a customer', async function () {
         const customerRepository = new CustomerRepository();
-        const customer = new Customer("123", "Customer 1");
+        const customer = new Customer("123", "Customer 1", null);
         const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
         customer.changeAddress(address);
         await customerRepository.create(customer);
@@ -69,7 +69,7 @@ describe('Customer repository test', function () {
 
     it('should find a customer', async function () {
         const customerRepository = new CustomerRepository();
-        const customer = new Customer("123", "Customer 1");
+        const customer = new Customer("123", "Customer 1", null);
         const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
         customer.changeAddress(address);
         await customerRepository.create(customer);
@@ -101,13 +101,13 @@ describe('Customer repository test', function () {
 
     it('should find all customers', async function () {
         const customerRepository = new CustomerRepository();
-        const customer1 = new Customer("123", "Customer 1");
+        const customer1 = new Customer("123", "Customer 1", null);
         const address1 = new Address("Street 1", 1, "Zipcode 1", "City 1");
         customer1.changeAddress(address1);
         customer1.addRewardPoints(10);
         customer1.activate();
 
-        const customer2 = new Customer("456", "Customer 2");
+        const customer2 = new Customer("456", "Customer 2", null);
         const address2 = new Address("Street2", 2, "Zipcode 2", "City 2");
         customer2.changeAddress(address2);
         customer2.addRewardPoints(20);
