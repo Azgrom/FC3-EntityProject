@@ -1,6 +1,6 @@
 import {Sequelize} from "sequelize-typescript";
-import ProductModel from "../db/sequelize/model/product.model";
-import Product from "../../domain/product/entity/product";
+import ProductModel from "./product.model";
+import Product from "../../../../domain/product/entity/product";
 import ProductRepository from "./product.repository";
 
 describe("Product repository test", () => {
@@ -23,7 +23,7 @@ describe("Product repository test", () => {
         await sequelize.close();
     });
 
-    it('should create a product', async () => {
+    it('should create a order', async () => {
         const productRepository = new ProductRepository();
         const product = new Product("1", "Product 1", 100);
 
@@ -40,7 +40,7 @@ describe("Product repository test", () => {
         });
     });
 
-    it('should update a product', async () => {
+    it('should update a order', async () => {
         const productRepository = new ProductRepository();
         const product = new Product("1", "Product 1", 100);
 
@@ -68,7 +68,7 @@ describe("Product repository test", () => {
         });
     });
 
-    it('should find a product', async () => {
+    it('should find a order', async () => {
         const productRepository = new ProductRepository();
         const product = new Product("1", "Product 1", 100);
 
