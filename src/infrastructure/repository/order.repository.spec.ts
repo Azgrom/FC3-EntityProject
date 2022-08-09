@@ -4,12 +4,12 @@ import CustomerModel from "../db/sequelize/model/customer.model";
 import OrderModel from "../db/sequelize/model/order.model";
 import OrderItemModel from "../db/sequelize/model/order-item.model";
 import CustomerRepository from "./customer.repository";
-import Customer from "../../domain/entity/customer";
-import Address from "../../domain/entity/address";
+import Customer from "../../domain/customer/entity/customer";
+import Address from "../../domain/customer/value-object/address";
 import ProductRepository from "./product.repository";
-import Product from "../../domain/entity/product";
-import Order from "../../domain/entity/order";
-import OrderItem from "../../domain/entity/orderItem";
+import Product from "../../domain/product/entity/product";
+import Order from "../../domain/checkout/entity/order";
+import OrderItem from "../../domain/checkout/entity/orderItem";
 import OrderRepository from "./order.repository";
 
 describe('Order repository test', function () {
@@ -26,7 +26,7 @@ describe('Order repository test', function () {
         await sequelize.addModels([CustomerModel, OrderModel, OrderItemModel, ProductModel]);
         await sequelize.sync()
 
-        const customer = new Customer("123", "Customer 1", null);
+        const customer = Customer.create("123", "Customer 1");
         const address = new Address("Street 1", 1, "Zipcode 1", "City 1");
         customer.changeAddress(address);
         const customerRepository = new CustomerRepository();

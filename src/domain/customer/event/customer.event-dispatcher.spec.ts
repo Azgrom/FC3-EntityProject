@@ -1,10 +1,10 @@
 import EnviaConsoleLog1Handler from "./envia-console-log1.handler";
 import EnviaConsoleLog2Handler from "./envia-console-log2.handler";
 import CustomerCreatedEvent from "./customer-created.event";
-import {EventDispatcher} from "../@shared/event.dispatcher";
-import Customer from "../../entity/customer";
+import {EventDispatcher} from "../../@shared/event/event.dispatcher";
+import Customer from "../entity/customer";
 import EnviaConsoleLogHandler from "./envia-console-log.handler";
-import Address from "../../entity/address";
+import Address from "../value-object/address";
 
 describe('Customer events tests', function () {
     it('should notify customer creation handlers', function () {
